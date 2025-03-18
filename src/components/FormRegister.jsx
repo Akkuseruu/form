@@ -24,34 +24,36 @@ export default function FormRegister() {
 
   function onSubmit(data) {
     console.log('Formulario enviado:', data);
-    // Guardar en localStorage
-    localStorage.setItem("user", JSON.stringify(schema));
+  
+    localStorage.setItem("user", JSON.stringify(data));
+  
     navigate('/login');
   }
+  
 
   return (
     <div>
       <h1>FORMULARIO DE REGISTRO</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input ref={username} type="text" placeholder='Nombre completo' {...register('name')} />
+        <input type="text" placeholder='Nombre completo' {...register('name')} />
         <p>{errors.name?.message}</p>
 
-        <input ref={lastName} type='text' placeholder='Apellidos' {...register('lastName')} />
+        <input type='text' placeholder='Apellidos' {...register('lastName')} />
         <p>{errors.lastName?.message}</p>
 
-        <input ref={email} type='email' placeholder='Correo electronico' {...register('email')} />
+        <input type='email' placeholder='Correo electronico' {...register('email')} />
         <p>{errors.email?.message}</p>
 
-        <input ref={age} type="number" placeholder='Edad' {...register('age')} />
+        <input type="number" placeholder='Edad' {...register('age')} />
         <p>{errors.age?.message}</p>
 
-        <input ref={phone} type="tel" placeholder='Número telefónico' {...register('phone')} />
+        <input type="tel" placeholder='Número telefónico' {...register('phone')} />
         <p>{errors.phone?.message}</p>
 
-        <input ref={pass} type="password" placeholder='Contraseña' {...register('password')} />
+        <input type="password" placeholder='Contraseña' {...register('password')} />
         <p>{errors.password?.message}</p>
 
-        <input ref={passConfirm} type="password" placeholder='Confirme la contraseña' {...register('confirmPassword')} />
+        <input type="password" placeholder='Confirme la contraseña' {...register('confirmPassword')} />
         <p>{errors.confirmPassword?.message}</p>
 
         <input type="submit" value="Registrar"/>
