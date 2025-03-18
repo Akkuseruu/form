@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,6 +24,8 @@ export default function FormRegister() {
 
   function onSubmit(data) {
     console.log('Formulario enviado:', data);
+    // Guardar en localStorage
+    localStorage.setItem("user", JSON.stringify(schema));
     navigate('/login');
   }
 
@@ -31,25 +33,25 @@ export default function FormRegister() {
     <div>
       <h1>FORMULARIO DE REGISTRO</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" placeholder='Nombre completo' {...register('name')} />
+        <input ref={username} type="text" placeholder='Nombre completo' {...register('name')} />
         <p>{errors.name?.message}</p>
 
-        <input type='text' placeholder='Apellidos' {...register('lastName')} />
+        <input ref={lastName} type='text' placeholder='Apellidos' {...register('lastName')} />
         <p>{errors.lastName?.message}</p>
 
-        <input type='email' placeholder='Correo electronico' {...register('email')} />
+        <input ref={email} type='email' placeholder='Correo electronico' {...register('email')} />
         <p>{errors.email?.message}</p>
 
-        <input type="number" placeholder='Edad' {...register('age')} />
+        <input ref={age} type="number" placeholder='Edad' {...register('age')} />
         <p>{errors.age?.message}</p>
 
-        <input type="tel" placeholder='Número telefónico' {...register('phone')} />
+        <input ref={phone} type="tel" placeholder='Número telefónico' {...register('phone')} />
         <p>{errors.phone?.message}</p>
 
-        <input type="password" placeholder='Contraseña' {...register('password')} />
+        <input ref={pass} type="password" placeholder='Contraseña' {...register('password')} />
         <p>{errors.password?.message}</p>
 
-        <input type="password" placeholder='Confirme la contraseña' {...register('confirmPassword')} />
+        <input ref={passConfirm} type="password" placeholder='Confirme la contraseña' {...register('confirmPassword')} />
         <p>{errors.confirmPassword?.message}</p>
 
         <input type="submit" value="Registrar"/>
