@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import FormLogin from './FormLogin';
 
 export default function FormRegister() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export default function FormRegister() {
   const schema = yup.object().shape({
     name: yup.string().required('El nombre no debe estar en blanco'),
     lastName: yup.string().required('El apellido no debe estar en blanco'),
+    email: yup.string().required('El email no debe estar en blanco').email('El email debe ser válido'),
     age: yup.number().typeError('La edad debe ser un número').integer('La edad debe ser un número entero').min(18, 'La edad debe ser mayor a 18').required('La edad no debe estar en blanco'),
     phone: yup.string().max(10,'El número debe contener exactamente 10 dígitos').required('El número no debe estar en blanco'),
     password: yup.string().required('La contraseña no debe estar en blanco').min(4, 'La contraseña debe tener al menos 4 caracteres').max(10, 'La contraseña debe tener como máximo 10 caracteres'),
@@ -22,7 +25,7 @@ export default function FormRegister() {
 
   function onSubmit(data) {
     console.log('Formulario enviado:', data);
-    navigate('FormLogin');
+    navigate(FormLogin);
   }
 
   return (
@@ -34,6 +37,9 @@ export default function FormRegister() {
 
         <input type='text' placeholder='Apellidos' {...register('lastName')} />
         <p>{errors.lastName?.message}</p>
+
+        <input type='email' placeholder='Correo electronico' {...register('email')} />
+        <p>{errors.email?.message}</p>
 
         <input type="number" placeholder='Edad' {...register('age')} />
         <p>{errors.age?.message}</p>
