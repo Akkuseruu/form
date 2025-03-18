@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import FormLogin from './FormLogin';
 
 export default function FormRegister() {
@@ -25,7 +24,7 @@ export default function FormRegister() {
 
   function onSubmit(data) {
     console.log('Formulario enviado:', data);
-    navigate(FormLogin);
+    navigate('/login');
   }
 
   return (
