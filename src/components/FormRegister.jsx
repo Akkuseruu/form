@@ -3,29 +3,29 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
-import FormLogin from './FormLogin';
 
-export default function FormRegister() {
+export default function FormRegister({ setRegisteredUser }) {
   const navigate = useNavigate();
-  
+
   const schema = yup.object().shape({
     name: yup.string().required('El nombre no debe estar en blanco'),
     lastName: yup.string().required('El apellido no debe estar en blanco'),
     email: yup.string().required('El email no debe estar en blanco').email('El email debe ser válido'),
     age: yup.number().typeError('La edad debe ser un número').integer('La edad debe ser un número entero').min(18, 'La edad debe ser mayor a 18').required('La edad no debe estar en blanco'),
-    phone: yup.string().max(10,'El número debe contener exactamente 10 dígitos').required('El número no debe estar en blanco'),
+    phone: yup.string().max(10, 'El número debe contener exactamente 10 dígitos').required('El número no debe estar en blanco'),
     password: yup.string().required('La contraseña no debe estar en blanco').min(4, 'La contraseña debe tener al menos 4 caracteres').max(10, 'La contraseña debe tener como máximo 10 caracteres'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debe confirmar la contraseña'),
   });
 
   const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
-  function onSubmit(data) {
+  const onSubmit = (data) => {
     console.log('Formulario enviado:', data);
+    setRegisteredUser({ email: data.email, password: data.password });
     navigate('/login');
-  }
+  };
 
   return (
     <div>
@@ -52,7 +52,7 @@ export default function FormRegister() {
         <input type="password" placeholder='Confirme la contraseña' {...register('confirmPassword')} />
         <p>{errors.confirmPassword?.message}</p>
 
-        <input type="submit" value="Registrar"/>
+        <input type="submit" value="Registrar" />
       </form>
     </div>
   );
