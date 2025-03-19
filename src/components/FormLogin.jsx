@@ -1,9 +1,102 @@
-import React from 'react'
-
+import React, { useEffect } from 'react'
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 export default function FormLogin() {
+  const storedUser = JSON.parse(localStorage.getItem("user")); // Definido fuera del useEffect
+
+  const schema = yup.object().shape({
+    email: yup.string().required('El email no debe estar en blanco').email('El email debe ser válido'),
+    password: yup.string().required('La contraseña no debe estar en blanco').min(4, 'La contraseña debe tener al menos 4 caracteres').max(10, 'La contraseña debe tener como máximo 10 caracteres'),
+  });
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  function onSubmit(data) {
+    if (storedUser && (storedUser.email === data.email && storedUser.password === data.password ))  {
+      alert("Has iniciado sesión correctamente");
+    }else{
+      alert("Las credenciales no son correctas")
+    }
+  }
+
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
+
+export default function FormLogin({ registeredUser }) {
+  const navigate = useNavigate();
+  const [intentos, setIntentos] = useState(0); 
+
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .required('El email no debe estar en blanco')
+      .email('El email debe ser válido'),
+    password: yup
+      .string()
+      .required('La contraseña no debe estar en blanco')
+      .min(4, 'La contraseña debe tener al menos 4 caracteres')
+      .max(10, 'La contraseña debe tener como máximo 10 caracteres'),
+  });
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    
+    if (registeredUser && data.email === registeredUser.email && data.password === registeredUser.password) {
+      console.log('Inicio de sesión exitoso');
+      navigate('/usuario');
+    } else {
+      
+      setIntentos(intentos + 1);
+
+      if (intentos >= 2) { 
+        alert('Has superado el número máximo de intentos. Serás redirigido al formulario de registro.');
+        navigate('/');
+      } else {
+        alert(`Email o contraseña incorrectos. Intentos restantes: ${3 - intentos}`);
+      }
+    }
+  };
+
   return (
     <div>
-        <h1>FormLogin</h1>
+      <h1>FormLogin</h1>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input type='email' placeholder='Correo electronico' {...register('email')} />
+        <p>{errors.email?.message}</p>
+
+        <input type="password" placeholder='Contraseña' {...register('password')} />
+        <p>{errors.password?.message}</p>
+
+        <input type="submit" value="Iniciar Sesion" />
+      </form>
+      <h1>Sign in</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input
+          type="email"
+          placeholder="Type your email"
+          {...register('email')}
+        />
+        <p>{errors.email?.message}</p>
+
+        <input
+          type="password"
+          placeholder="Type your password"
+          {...register('password')}
+        />
+        <p>{errors.password?.message}</p>
+
+        <input type="submit" value="Sign in" />
+      </form>
     </div>
   );
 }
