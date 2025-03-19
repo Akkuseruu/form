@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function FormLogin({ registeredUser }) {
   const navigate = useNavigate();
+  const [intentos, setIntentos] = useState(0); 
 
   const schema = yup.object().shape({
     email: yup
@@ -24,12 +25,20 @@ export default function FormLogin({ registeredUser }) {
   });
 
   const onSubmit = (data) => {
-
+    
     if (registeredUser && data.email === registeredUser.email && data.password === registeredUser.password) {
       console.log('Inicio de sesión exitoso');
       navigate('/usuario');
     } else {
-      alert('Email o contraseña incorrectos');
+      
+      setIntentos(intentos + 1);
+
+      if (intentos >= 2) { 
+        alert('Has superado el número máximo de intentos. Serás redirigido al formulario de registro.');
+        navigate('/');
+      } else {
+        alert(`Email o contraseña incorrectos. Intentos restantes: ${3 - intentos}`);
+      }
     }
   };
 
@@ -37,7 +46,6 @@ export default function FormLogin({ registeredUser }) {
     <div>
       <h1>Sign in</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-
         <input
           type="email"
           placeholder="Type your email"
